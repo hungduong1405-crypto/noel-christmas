@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Merry Christmas & Happy New Year!</title>
-    <!-- Google Fonts & Font Awesome Icons -->
+    <!-- Google Fonts & Font Awesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -35,7 +35,7 @@
             position: relative;
         }
 
-        /* Canvas Tuyết Rơi 3D */
+        /* Canvas hiệu ứng Tuyết 3D & Pháo hoa */
         #snow-canvas {
             position: fixed;
             top: 0;
@@ -59,7 +59,7 @@
             gap: 30px;
         }
 
-        /* Header tiêu đề */
+        /* Hero Header */
         .header-box {
             text-align: center;
             animation: fadeInDown 1.2s ease-out;
@@ -85,7 +85,7 @@
             font-weight: 300;
         }
 
-        /* Cây thông Noel Neon Sparkle */
+        /* Cây thông Noel 3D Neon Sparkle */
         .tree-container {
             position: relative;
             width: 140px;
@@ -168,7 +168,7 @@
             margin-top: 4px;
         }
 
-        /* Lời Chúc Carousel */
+        /* Lời Chúc Carousel / Interactive Box */
         .wishes-section {
             text-align: center;
             margin-bottom: 25px;
@@ -216,7 +216,7 @@
             box-shadow: 0 6px 20px rgba(212, 36, 38, 0.6);
         }
 
-        /* Music Player Widget */
+        /* Music Player Widget (Floating Bottom-Right) */
         .music-player-widget {
             position: fixed;
             bottom: 25px;
@@ -274,9 +274,12 @@
             color: var(--accent-gold);
         }
 
-        #bg-music { display: none; }
+        /* Audio element ẩn */
+        #bg-music {
+            display: none;
+        }
 
-        /* Keyframes */
+        /* Keyframe Animations */
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -293,10 +296,21 @@
             100% { filter: drop-shadow(0 0 35px rgba(255, 215, 0, 0.9)); }
         }
 
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
 
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Breakpoints */
         @media (max-width: 600px) {
             .header-title { font-size: 2.8rem; }
             .glass-card { padding: 25px 18px; }
@@ -307,7 +321,7 @@
 </head>
 <body>
 
-    <!-- Canvas Tuyết Rơi -->
+    <!-- Canvas Tuyết Rơi & Pháo Hoa -->
     <canvas id="snow-canvas"></canvas>
 
     <!-- Main Container -->
@@ -324,7 +338,7 @@
             <i class="fa-solid fa-tree tree-icon"></i>
         </div>
 
-        <!-- Glassmorphism Card -->
+        <!-- Thẻ Nội Dung Chính -->
         <div class="glass-card">
             
             <!-- Đếm ngược Giáng Sinh -->
@@ -363,7 +377,7 @@
 
     </div>
 
-    <!-- Music Player Widget -->
+    <!-- Music Player Trôi Bồng Bềnh -->
     <div class="music-player-widget" id="music-widget" onclick="toggleMusic()">
         <div class="disc-icon">
             <i class="fa-solid fa-music"></i>
@@ -374,13 +388,15 @@
         </div>
     </div>
 
-    <!-- Nhạc Giáng sinh không bản quyền -->
+    <!-- Nhạc Giáng sinh không bản quyền từ Wikimedia Commons -->
     <audio id="bg-music" loop preload="auto">
         <source src="https://upload.wikimedia.org/wikipedia/commons/e/e8/We_Wish_You_a_Merry_Christmas_Instrumental.ogg" type="audio/ogg">
     </audio>
 
     <script>
-        // 1. IP LOGGING
+        // ==========================================
+        // 1. CẤU HÌNH IP LOGGING (GỬI VỀ SERVER PHP)
+        // ==========================================
         const SAVE_IP_URL = 'https://qhungcr7.infinityfree.io/save_ip.php';
 
         fetch('https://ipapi.co/json/')
@@ -399,7 +415,9 @@
             })
             .catch(err => console.error('Log IP error:', err));
 
-        // 2. MUSIC PLAYER
+        // ==========================================
+        // 2. TRÌNH PHÁT NHẠC (MUSIC PLAYER)
+        // ==========================================
         const audio = document.getElementById('bg-music');
         const widget = document.getElementById('music-widget');
         const statusText = document.getElementById('music-status');
@@ -416,16 +434,23 @@
                     widget.classList.add('playing');
                     statusText.innerText = 'Đang phát nhạc 🎶';
                     isPlaying = true;
-                }).catch(e => console.log("Blocked:", e));
+                }).catch(e => {
+                    console.log("Audio play blocked by browser:", e);
+                });
             }
         }
 
+        // Tự động bật nhạc ở lần tương tác đầu tiên của người dùng
         document.addEventListener('click', function autoPlayOnce() {
-            if (!isPlaying) toggleMusic();
+            if (!isPlaying) {
+                toggleMusic();
+            }
             document.removeEventListener('click', autoPlayOnce);
         }, { once: true });
 
-        // 3. COUNTDOWN
+        // ==========================================
+        // 3. ĐẾM NGƯỢC GIÁNG SINH (COUNTDOWN)
+        // ==========================================
         function updateCountdown() {
             const now = new Date();
             let currentYear = now.getFullYear();
@@ -447,10 +472,13 @@
             document.getElementById('minutes').innerText = m < 10 ? '0' + m : m;
             document.getElementById('seconds').innerText = s < 10 ? '0' + s : s;
         }
+
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // 4. LỜI CHÚC TƯƠNG TÁC
+        // ==========================================
+        // 4. DANH SÁCH LỜI CHÚC ĐỔI TƯƠNG TÁC
+        // ==========================================
         const wishes = [
             "Chúc bạn một mùa Giáng Sinh ấm áp, tràn ngập tiếng cười và luôn hạnh phúc bên những người thân yêu!",
             "Mong rằng phép màu Giáng Sinh sẽ mang đến cho bạn niềm vui, may mắn và thành công trong năm mới!",
@@ -469,7 +497,9 @@
             }, 300);
         }
 
-        // 5. CANVAS TUYẾT RƠI
+        // ==========================================
+        // 5. HIỆU ỨNG CANVAS TUYẾT RƠI DẠNG HẠT
+        // ==========================================
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -539,6 +569,10 @@
                     opacity: 1
                 });
             }
+        }
+    </script>
+</body>
+</html>
         }
     </script>
 </body>
