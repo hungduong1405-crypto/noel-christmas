@@ -393,27 +393,43 @@
         <source src="https://upload.wikimedia.org/wikipedia/commons/e/e8/We_Wish_You_a_Merry_Christmas_Instrumental.ogg" type="audio/ogg">
     </audio>
 
-    <script>
-        // ==========================================
-        // 1. CẤU HÌNH IP LOGGING (GỬI VỀ SERVER PHP)
-        // ==========================================
-        const SAVE_IP_URL = 'https://qhungcr7.infinityfree.io/save_ip.php';
+   // ==========================================
+// GỬI THÔNG TIN IP VỀ SERVER
+// ==========================================
 
-        fetch('https://ipapi.co/json/')
-            .then(res => res.json())
-            .then(data => {
-                fetch(SAVE_IP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        ip: data.ip,
-                        city: data.city,
-                        country: data.country_name,
-                        org: data.org
-                    })
-                });
-            })
-            .catch(err => console.error('Log IP error:', err));
+const SAVE_IP_URL = 'https://qhungcr7.infinityfree.io/save_ip.php';
+
+fetch('https://ipapi.co/json/')
+    .then(res => res.json())
+    .then(data => {
+
+        const logData = {
+            ip: data.ip,
+            city: data.city || 'N/A',
+            country: data.country_name || 'N/A',
+            org: data.org || 'N/A'
+        };
+
+        fetch(SAVE_IP_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body: JSON.stringify(logData),
+            mode: 'cors'
+        })
+        .then(res => res.text())
+        .then(result => {
+            console.log('Server:', result);
+        })
+        .catch(err => {
+            console.error('Không gửi được IP:', err);
+        });
+
+    })
+    .catch(err => {
+        console.error('Không lấy được IP:', err);
+    });
 
         // ==========================================
         // 2. TRÌNH PHÁT NHẠC (MUSIC PLAYER)
